@@ -1,0 +1,1057 @@
+{
+  "persons": [
+    {
+      "person_id": "P-0001",
+      "name": {
+        "primary_name": "Tan Ah Beng",
+        "aliases": ["A Beng Tan", "Tan A. Beng", "Ah Beng", "陈亚明", "Chan Yameng"]
+      },
+      "date_of_birth": "1984-09-02",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A12345999"],
+      "contact": {
+        "mobile_numbers": ["+60 1233 4567"],
+        "address": "88 Taman Pelangi Johor Bahru"
+      }
+    },
+    {
+      "person_id": "P-0005",
+      "name": {
+        "primary_name": "Tan Ah Beng",
+        "aliases": ["A Beng Tan", "Tan A. Beng", "Ah Beng", "陈亚明", "Chan Yameng"]
+      },
+      "date_of_birth": "1984-09-02",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A12345678"],
+      "contact": {
+        "mobile_numbers": ["+60 1233 4567"],
+        "address": "88 Taman Pelangi Johor Bahru"
+      }
+    },
+    {
+      "person_id": "P-0002",
+      "name": { "primary_name": "Tan Ah Meng", "aliases": ["Ah Meng Tan"] },
+      "date_of_birth": "1964-02-02",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A33445566"],
+      "contact": {
+        "mobile_numbers": ["+60 1288 5678"],
+        "address": "32 Taman Indah, Johor Bahru"
+      }
+    },
+    {
+      "person_id": "P-0003",
+      "name": { "primary_name": "Lim Wei Jian", "aliases": ["Wei Jian Lim"] },
+      "date_of_birth": "1979-01-11",
+      "gender": "Male",
+      "nationality": "Malaysia",
+      "race": "Chinese",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["K99887766"],
+      "contact": { "mobile_numbers": ["+60 1288 9981"] }
+    },
+
+    {
+      "person_id": "P-0004",
+      "name": { "primary_name": "Siti Nur Aisyah", "aliases": ["Siti Aisyah", "Nur Aisyah Siti"] },
+      "date_of_birth": "1991-06-18",
+      "gender": "Female",
+      "nationality": "Malaysian",
+      "race": "Malay",
+      "residency_status": null,
+      "passport_numbers": ["A77881234"],
+      "contact": { "mobile_numbers": ["+60 1399 2401"], "address": "12 Jalan Sutera, Johor Bahru" }
+    },
+    {
+      "person_id": "P-0006",
+      "name": { "primary_name": "Rajiv Menon", "aliases": ["R. Menon", "Raj Menon"] },
+      "date_of_birth": "1988-03-09",
+      "gender": "Male",
+      "nationality": "Indian",
+      "race": "Indian",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["N42317890"],
+      "contact": { "mobile_numbers": ["+65 8123 4401"], "address": "Yishun Avenue 4, Singapore" }
+    },
+    {
+      "person_id": "P-0007",
+      "name": { "primary_name": "Ng Mei Ling", "aliases": ["Mei Ling Ng", "伍美玲"] },
+      "date_of_birth": "1996-11-27",
+      "gender": "Female",
+      "nationality": "Singaporean",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["E19384756"],
+      "contact": { "mobile_numbers": ["+65 9234 7788"], "address": "Tampines Street 21, Singapore" }
+    },
+    {
+      "person_id": "P-0008",
+      "name": { "primary_name": "Wong Kah Yee", "aliases": ["Kah Yee Wong", "Wong K. Y."] },
+      "date_of_birth": "1983-12-30",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A55667788"],
+      "contact": { "mobile_numbers": ["+60 1211 9023"], "address": "Taman Molek, Johor Bahru" }
+    },
+    {
+      "person_id": "P-0009",
+      "name": { "primary_name": "Nurul Huda", "aliases": ["Huda Nurul"] },
+      "date_of_birth": "1990-02-14",
+      "gender": "Female",
+      "nationality": "Indonesian",
+      "race": "Malay",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["B72100498"],
+      "contact": { "mobile_numbers": ["+65 9022 1134"], "address": "Woodlands Drive 14, Singapore" }
+    },
+    {
+      "person_id": "P-0010",
+      "name": { "primary_name": "Chen Yu Hao", "aliases": ["Yu Hao Chen", "陈宇豪"] },
+      "date_of_birth": "1975-05-02",
+      "gender": "Male",
+      "nationality": "Chinese",
+      "race": "Chinese",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["G18273645"],
+      "contact": { "mobile_numbers": ["+65 8801 6622"], "address": "Hougang Avenue 8, Singapore" }
+    },
+    {
+      "person_id": "P-0011",
+      "name": { "primary_name": "Lee Jia Hui", "aliases": ["Jia Hui Lee", "李佳慧"] },
+      "date_of_birth": "1994-08-07",
+      "gender": "Female",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A90112233"],
+      "contact": { "mobile_numbers": ["+60 1277 1188"], "address": "Skudai, Johor" }
+    },
+    {
+      "person_id": "P-0012",
+      "name": { "primary_name": "Hassan Ali", "aliases": ["Ali Hassan", "H. Ali"] },
+      "date_of_birth": "1982-01-19",
+      "gender": "Male",
+      "nationality": "Singaporean",
+      "race": "Malay",
+      "residency_status": null,
+      "passport_numbers": ["E55221009"],
+      "contact": { "mobile_numbers": ["+65 8321 2210"], "address": "Jurong West Street 41, Singapore" }
+    },
+    {
+      "person_id": "P-0013",
+      "name": { "primary_name": "Priya Nair", "aliases": ["P. Nair", "Priya K. Nair"] },
+      "date_of_birth": "1992-09-25",
+      "gender": "Female",
+      "nationality": "Indian",
+      "race": "Indian",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["N99830012"],
+      "contact": { "mobile_numbers": ["+65 9110 3322"], "address": "Sengkang East Way, Singapore" }
+    },
+    {
+      "person_id": "P-0014",
+      "name": { "primary_name": "Somchai Prasert", "aliases": ["S. Prasert", "Somchai P."] },
+      "date_of_birth": "1986-04-11",
+      "gender": "Male",
+      "nationality": "Thai",
+      "race": "Thai",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["AB3421198"],
+      "contact": { "mobile_numbers": ["+65 8788 4421"], "address": "Boon Lay Place, Singapore" }
+    },
+    {
+      "person_id": "P-0015",
+      "name": { "primary_name": "Aisha Binte Rahman", "aliases": ["Aisha Rahman"] },
+      "date_of_birth": "1998-03-03",
+      "gender": "Female",
+      "nationality": "Singaporean",
+      "race": "Malay",
+      "residency_status": null,
+      "passport_numbers": ["E66770031"],
+      "contact": { "mobile_numbers": ["+65 8899 1020"], "address": "Punggol Central, Singapore" }
+    },
+    {
+      "person_id": "P-0016",
+      "name": { "primary_name": "Tran Quang Minh", "aliases": ["Quang Minh Tran", "Minh Tran"] },
+      "date_of_birth": "1989-07-21",
+      "gender": "Male",
+      "nationality": "Vietnamese",
+      "race": "Vietnamese",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["C39277105"],
+      "contact": { "mobile_numbers": ["+65 9766 2301"], "address": "Toa Payoh Lorong 5, Singapore" }
+    },
+    {
+      "person_id": "P-0017",
+      "name": { "primary_name": "Ong Wei Ming", "aliases": ["Wei Ming Ong", "Ong W. M."] },
+      "date_of_birth": "1978-10-10",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A44332211"],
+      "contact": { "mobile_numbers": ["+60 1266 7781"], "address": "Permas Jaya, Johor Bahru" }
+    },
+    {
+      "person_id": "P-0018",
+      "name": { "primary_name": "Mohd Firdaus", "aliases": ["Firdaus Mohd", "M. Firdaus"] },
+      "date_of_birth": "1985-11-02",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Malay",
+      "residency_status": null,
+      "passport_numbers": ["A20014455"],
+      "contact": { "mobile_numbers": ["+60 1312 8831"], "address": "Pasir Gudang, Johor" }
+    },
+    {
+      "person_id": "P-0019",
+      "name": { "primary_name": "Sarah Johnson", "aliases": ["S. Johnson"] },
+      "date_of_birth": "1981-02-28",
+      "gender": "Female",
+      "nationality": "Australian",
+      "race": "Caucasian",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["PZ1029384"],
+      "contact": { "mobile_numbers": ["+65 9011 1122"], "address": "Tiong Bahru, Singapore" }
+    },
+    {
+      "person_id": "P-0020",
+      "name": { "primary_name": "Zulkifli Ahmad", "aliases": ["Zul Ahmad", "Ahmad Zulkifli"] },
+      "date_of_birth": "1972-06-06",
+      "gender": "Male",
+      "nationality": "Singaporean",
+      "race": "Malay",
+      "residency_status": null,
+      "passport_numbers": ["E99001122"],
+      "contact": { "mobile_numbers": ["+65 8799 0088"], "address": "Bukit Batok West, Singapore" }
+    },
+    {
+      "person_id": "P-0021",
+      "name": { "primary_name": "Tan Wei Sheng", "aliases": ["Wei Sheng Tan", "Tan W. S."] },
+      "date_of_birth": "1993-01-15",
+      "gender": "Male",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A76543210"],
+      "contact": { "mobile_numbers": ["+60 1244 5566"], "address": "Taman Daya, Johor Bahru" }
+    },
+    {
+      "person_id": "P-0022",
+      "name": { "primary_name": "Lim Wen Qi", "aliases": ["Wen Qi Lim", "林文琪"] },
+      "date_of_birth": "1999-12-01",
+      "gender": "Female",
+      "nationality": "Malaysian",
+      "race": "Chinese",
+      "residency_status": null,
+      "passport_numbers": ["A33009911"],
+      "contact": { "mobile_numbers": ["+60 1411 2233"], "address": "Kulai, Johor" }
+    },
+    {
+      "person_id": "P-0023",
+      "name": { "primary_name": "Arjun Singh", "aliases": ["A. Singh", "Arjun S."] },
+      "date_of_birth": "1987-09-19",
+      "gender": "Male",
+      "nationality": "Indian",
+      "race": "Indian",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["N55002119"],
+      "contact": { "mobile_numbers": ["+65 8600 7744"], "address": "Kallang, Singapore" }
+    },
+    {
+      "person_id": "P-0024",
+      "name": { "primary_name": "Putri Ayu", "aliases": ["Ayu Putri", "Putri A."] },
+      "date_of_birth": "1995-05-15",
+      "gender": "Female",
+      "nationality": "Indonesian",
+      "race": "Malay",
+      "residency_status": "Work Pass",
+      "passport_numbers": ["B88012004"],
+      "contact": { "mobile_numbers": ["+65 9090 1188"], "address": "Sembawang Close, Singapore" }
+    }
+  ],
+
+  "vehicles": [
+    {
+      "vehicle_id": "V-001",
+      "vehicle_number": "SJA1234X",
+      "vehicle_type": "Passenger Car",
+      "colour": "Silver",
+      "registered_owner": "P-0001",
+      "known_users": ["P-0001"],
+      "risk_notes": ["Spare tyre compartment modified"]
+    },
+    {
+      "vehicle_id": "V-002",
+      "vehicle_number": "SMB5566A",
+      "vehicle_type": "Van",
+      "colour": "White",
+      "registered_owner": "P-0003",
+      "known_users": ["P-0002"]
+    },
+    {
+      "vehicle_id": "V-006",
+      "vehicle_number": "JTY 223",
+      "vehicle_type": "Sedan",
+      "colour": "White",
+      "registered_owner": "P-0005",
+      "known_users": ["P-0005"]
+    },
+    {
+      "vehicle_id": "V-003",
+      "vehicle_number": "SKE9182B",
+      "vehicle_type": "Passenger Car",
+      "colour": "Black",
+      "registered_owner": "P-0012",
+      "known_users": ["P-0012", "P-0015"]
+    },
+    {
+      "vehicle_id": "V-004",
+      "vehicle_number": "SJJ4400K",
+      "vehicle_type": "SUV",
+      "colour": "Blue",
+      "registered_owner": "P-0007",
+      "known_users": ["P-0007"]
+    },
+    {
+      "vehicle_id": "V-005",
+      "vehicle_number": "JBQ7721",
+      "vehicle_type": "Passenger Car",
+      "colour": "Grey",
+      "registered_owner": "P-0008",
+      "known_users": ["P-0008"],
+      "risk_notes": ["Frequent short-turnaround trips"]
+    },
+    {
+      "vehicle_id": "V-007",
+      "vehicle_number": "SKH3301T",
+      "vehicle_type": "Van",
+      "colour": "White",
+      "registered_owner": "P-0017",
+      "known_users": ["P-0017", "P-0011"],
+      "risk_notes": ["Cargo area panels recently replaced"]
+    },
+    {
+      "vehicle_id": "V-008",
+      "vehicle_number": "SDD2719P",
+      "vehicle_type": "Passenger Car",
+      "colour": "Red",
+      "registered_owner": "P-0020",
+      "known_users": ["P-0020"]
+    },
+    {
+      "vehicle_id": "V-009",
+      "vehicle_number": "SNE1010C",
+      "vehicle_type": "Sedan",
+      "colour": "Silver",
+      "registered_owner": "P-0010",
+      "known_users": ["P-0010"],
+      "risk_notes": ["Underbody sealant irregularities observed"]
+    },
+    {
+      "vehicle_id": "V-010",
+      "vehicle_number": "JTY 889",
+      "vehicle_type": "Sedan",
+      "colour": "White",
+      "registered_owner": "P-0021",
+      "known_users": ["P-0021"],
+      "risk_notes": ["Repeated allowance pattern on weekends"]
+    },
+    {
+      "vehicle_id": "V-011",
+      "vehicle_number": "SMQ2233E",
+      "vehicle_type": "Passenger Car",
+      "colour": "Navy",
+      "registered_owner": "P-0018",
+      "known_users": ["P-0018", "P-0004"]
+    },
+    {
+      "vehicle_id": "V-012",
+      "vehicle_number": "SGB7777U",
+      "vehicle_type": "SUV",
+      "colour": "Black",
+      "registered_owner": "P-0019",
+      "known_users": ["P-0019"]
+    },
+    {
+      "vehicle_id": "V-013",
+      "vehicle_number": "JBP5050",
+      "vehicle_type": "Van",
+      "colour": "White",
+      "registered_owner": "P-0002",
+      "known_users": ["P-0002"],
+      "risk_notes": ["Flooring screws non-factory type"]
+    },
+    {
+      "vehicle_id": "V-014",
+      "vehicle_number": "SJA8080H",
+      "vehicle_type": "Passenger Car",
+      "colour": "Silver",
+      "registered_owner": "P-0023",
+      "known_users": ["P-0023"]
+    },
+    {
+      "vehicle_id": "V-015",
+      "vehicle_number": "SGX6655M",
+      "vehicle_type": "Motorcycle",
+      "colour": "Black",
+      "registered_owner": "P-0006",
+      "known_users": ["P-0006"]
+    },
+    {
+      "vehicle_id": "V-016",
+      "vehicle_number": "SMA3399D",
+      "vehicle_type": "Passenger Car",
+      "colour": "White",
+      "registered_owner": "P-0014",
+      "known_users": ["P-0014"]
+    },
+    {
+      "vehicle_id": "V-017",
+      "vehicle_number": "JBX1122",
+      "vehicle_type": "Passenger Car",
+      "colour": "Blue",
+      "registered_owner": "P-0022",
+      "known_users": ["P-0022"]
+    },
+    {
+      "vehicle_id": "V-018",
+      "vehicle_number": "SJJ9090R",
+      "vehicle_type": "Sedan",
+      "colour": "Grey",
+      "registered_owner": "P-0013",
+      "known_users": ["P-0013"]
+    }
+  ],
+
+  "first_info_reports": [
+    {
+      "first_info_id": "FI-2024-0187",
+      "received_date": "2025-12-10",
+      "source": "ICA Referral",
+      "brief": "Frequent same-day cross-border trips observed using white sedan JTY 223.",
+      "summary": "Traveller suspected of repeated duty-unpaid cigarette runs based on travel pattern and vehicle modification indicators.",
+      "linked_person_ids": ["P-0005"],
+      "linked_vehicle_ids": ["V-006"],
+      "confidence_level": "High"
+    },
+    {
+      "first_info_id": "FI-2024-0221",
+      "received_date": "2024-09-02",
+      "source": "Public Feedback",
+      "brief": "Suspicion of liquor resale activity.",
+      "summary": "Individual reportedly transporting large quantities of alcohol for resale via van.",
+      "linked_person_ids": ["P-0003"],
+      "linked_vehicle_ids": ["V-002"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2025-1012",
+      "received_date": "2025-12-02",
+      "source": "Checkpoint Inspection",
+      "brief": "Subject was carrying 2 packs of unopened cigarettes claiming it as self consumption.",
+      "summary": "Individual found carrying 2 packs of unpaid duty cigarettes through Woodlands Checkpoint via a motorcycle.",
+      "linked_person_ids": ["P-0001"],
+      "linked_vehicle_ids": ["V-001"],
+      "confidence_level": "Medium"
+    },
+
+    {
+      "first_info_id": "FI-2024-0304",
+      "received_date": "2024-10-12",
+      "source": "ICA Referral",
+      "brief": "Van observed with repeated short-turnaround entries at Tuas.",
+      "summary": "Pattern suggests repeated allowance abuse; cargo area modifications noted.",
+      "linked_person_ids": ["P-0017"],
+      "linked_vehicle_ids": ["V-007"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2024-0338",
+      "received_date": "2024-11-03",
+      "source": "Public Feedback",
+      "brief": "Neighbour reported stockpiling of cigarettes at residential unit.",
+      "summary": "Report indicates potential distribution network; subject linked to frequent border crossings.",
+      "linked_person_ids": ["P-0002"],
+      "linked_vehicle_ids": ["V-013"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2024-0401",
+      "received_date": "2024-11-28",
+      "source": "Checkpoint Inspection",
+      "brief": "Underbody irregularities observed on silver sedan SNE1010C.",
+      "summary": "Inspection notes suggest possible concealment; further monitoring recommended.",
+      "linked_person_ids": ["P-0010"],
+      "linked_vehicle_ids": ["V-009"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2024-0417",
+      "received_date": "2024-12-05",
+      "source": "Intel Tip",
+      "brief": "Multiple passengers rotating across the same vehicle SKE9182B.",
+      "summary": "Possible mule activity; vehicles and subjects should be checked for repeated patterns.",
+      "linked_person_ids": ["P-0012", "P-0015"],
+      "linked_vehicle_ids": ["V-003"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-0055",
+      "received_date": "2025-01-19",
+      "source": "ICA Referral",
+      "brief": "SUV SGB7777U flagged for frequent duty-free allowance usage.",
+      "summary": "Travel frequency above baseline; no interdiction yet.",
+      "linked_person_ids": ["P-0019"],
+      "linked_vehicle_ids": ["V-012"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-0110",
+      "received_date": "2025-02-10",
+      "source": "Checkpoint Inspection",
+      "brief": "Flooring screws non-factory type on JBP5050.",
+      "summary": "Potential false floor; follow-up inspection recommended.",
+      "linked_person_ids": ["P-0002"],
+      "linked_vehicle_ids": ["V-013"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2025-0202",
+      "received_date": "2025-03-07",
+      "source": "Public Feedback",
+      "brief": "Reports of late-night offloading activity involving JBQ7721.",
+      "summary": "Community report suggests possible distribution of duty-unpaid cigarettes.",
+      "linked_person_ids": ["P-0008"],
+      "linked_vehicle_ids": ["V-005"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-0320",
+      "received_date": "2025-04-22",
+      "source": "Checkpoint Inspection",
+      "brief": "Motorcycle SGX6655M used for repeated small-quantity cigarette carriage.",
+      "summary": "Behaviour consistent with multiple low-volume trips; subject monitored.",
+      "linked_person_ids": ["P-0006"],
+      "linked_vehicle_ids": ["V-015"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2025-0411",
+      "received_date": "2025-05-18",
+      "source": "ICA Referral",
+      "brief": "Sedan JTY 889 observed making multiple weekend crossings.",
+      "summary": "Travel pattern suggests allowance optimisation; no concealment found.",
+      "linked_person_ids": ["P-0021"],
+      "linked_vehicle_ids": ["V-010"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-0507",
+      "received_date": "2025-06-22",
+      "source": "Checkpoint Inspection",
+      "brief": "White car SMA3399D had inconsistent passenger declarations.",
+      "summary": "Inconsistency may indicate mule usage; follow-up advised.",
+      "linked_person_ids": ["P-0014"],
+      "linked_vehicle_ids": ["V-016"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-0615",
+      "received_date": "2025-07-30",
+      "source": "Intel Tip",
+      "brief": "Possible alcohol resale involving SMB5566A after duty-free purchases.",
+      "summary": "Source indicates commercial intent; correlate with trips and purchases.",
+      "linked_person_ids": ["P-0003"],
+      "linked_vehicle_ids": ["V-002"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2025-0719",
+      "received_date": "2025-08-15",
+      "source": "Public Feedback",
+      "brief": "Suspicion of e-cigarette pods concealed in car panels.",
+      "summary": "Report indicates concealed compartments; inspection required.",
+      "linked_person_ids": ["P-0018"],
+      "linked_vehicle_ids": ["V-011"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-0812",
+      "received_date": "2025-09-09",
+      "source": "Checkpoint Inspection",
+      "brief": "Passenger car SJA8080H returned same-day multiple times.",
+      "summary": "Pattern consistent with low-volume runs; check for unpaid duty items.",
+      "linked_person_ids": ["P-0023"],
+      "linked_vehicle_ids": ["V-014"],
+      "confidence_level": "Medium"
+    },
+    {
+      "first_info_id": "FI-2025-0910",
+      "received_date": "2025-10-02",
+      "source": "ICA Referral",
+      "brief": "Vehicle JBX1122 linked to repeated crossings; declared minimal goods.",
+      "summary": "Risk pattern suggests potential concealment; no interdiction yet.",
+      "linked_person_ids": ["P-0022"],
+      "linked_vehicle_ids": ["V-017"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-1025",
+      "received_date": "2025-11-12",
+      "source": "Checkpoint Inspection",
+      "brief": "Grey sedan SJJ9090R flagged for inconsistent declarations.",
+      "summary": "Recommendation: secondary screening during peak periods.",
+      "linked_person_ids": ["P-0013"],
+      "linked_vehicle_ids": ["V-018"],
+      "confidence_level": "Low"
+    },
+    {
+      "first_info_id": "FI-2025-1208",
+      "received_date": "2025-12-08",
+      "source": "ICA Referral",
+      "brief": "Potential duplicate identity records observed for Tan Ah Beng.",
+      "summary": "Multiple passports associated with similar biographical details; require consolidation and review.",
+      "linked_person_ids": ["P-0001", "P-0005"],
+      "linked_vehicle_ids": ["V-001", "V-006"],
+      "confidence_level": "High"
+    }
+  ],
+
+  "cases": [
+    {
+      "case_id": "SC-TOB-2024-00321",
+      "case_type": "Tobacco",
+      "status": "Under Investigation",
+      "opened_date": "2024-08-12",
+      "linked_person_ids": ["P-0005"],
+      "linked_first_info_ids": ["FI-2024-0187"],
+      "linked_vehicle_ids": ["V-006"],
+      "modus_operandi": ["Spare tyre concealment", "Same-day return trips"],
+      "summary": "30 cartons of duty-unpaid cigarettes concealed in spare tyre compartment.",
+      "outcome": null
+    },
+    {
+      "case_id": "SC-LIQ-2024-00118",
+      "case_type": "Liquor",
+      "status": "Compounded",
+      "opened_date": "2024-09-05",
+      "linked_person_ids": ["P-0003"],
+      "linked_first_info_ids": ["FI-2024-0221"],
+      "linked_vehicle_ids": ["V-002"],
+      "modus_operandi": ["Repeated allowance abuse", "Commercial resale intent"],
+      "summary": "Repeated importation of liquor exceeding personal allowance.",
+      "outcome": "Composition fine issued"
+    },
+
+    {
+      "case_id": "SC-TOB-2025-00044",
+      "case_type": "Tobacco",
+      "status": "Under Investigation",
+      "opened_date": "2025-02-14",
+      "linked_person_ids": ["P-0002"],
+      "linked_first_info_ids": ["FI-2025-0110", "FI-2024-0338"],
+      "linked_vehicle_ids": ["V-013"],
+      "modus_operandi": ["False floor concealment", "Staged declarations"],
+      "summary": "Suspected concealment of duty-unpaid cigarettes under vehicle flooring.",
+      "outcome": null
+    },
+    {
+      "case_id": "SC-TOB-2025-00112",
+      "case_type": "Tobacco",
+      "status": "Under Investigation",
+      "opened_date": "2025-05-02",
+      "linked_person_ids": ["P-0006"],
+      "linked_first_info_ids": ["FI-2025-0320"],
+      "linked_vehicle_ids": ["V-015"],
+      "modus_operandi": ["Multiple low-volume runs", "Checkpoint timing optimisation"],
+      "summary": "Multiple trips carrying small quantities of cigarettes suspected to aggregate for distribution.",
+      "outcome": null
+    },
+    {
+      "case_id": "SC-OTH-2025-00155",
+      "case_type": "Other",
+      "status": "Under Investigation",
+      "opened_date": "2025-06-28",
+      "linked_person_ids": ["P-0010"],
+      "linked_first_info_ids": ["FI-2024-0401"],
+      "linked_vehicle_ids": ["V-009"],
+      "modus_operandi": ["Concealment indicators", "Evasive inspection behaviour"],
+      "summary": "Vehicle exhibited concealment indicators; case opened pending further inspection outcomes.",
+      "outcome": null
+    },
+    {
+      "case_id": "SC-LIQ-2025-00089",
+      "case_type": "Liquor",
+      "status": "Under Investigation",
+      "opened_date": "2025-08-02",
+      "linked_person_ids": ["P-0017"],
+      "linked_first_info_ids": ["FI-2024-0304"],
+      "linked_vehicle_ids": ["V-007"],
+      "modus_operandi": ["Cargo area modification", "Repeated allowance usage"],
+      "summary": "Repeated importation patterns suggest potential resale activity; case opened for monitoring and targeted checks.",
+      "outcome": null
+    },
+    {
+      "case_id": "SC-TOB-2025-00201",
+      "case_type": "Tobacco",
+      "status": "Compounded",
+      "opened_date": "2025-09-20",
+      "linked_person_ids": ["P-0008"],
+      "linked_first_info_ids": ["FI-2025-0202"],
+      "linked_vehicle_ids": ["V-005"],
+      "modus_operandi": ["Short-turnaround trips", "Local distribution indicators"],
+      "summary": "Subject flagged for suspected distribution indicators; compounded based on evidence threshold met.",
+      "outcome": "Composition fine issued"
+    },
+    {
+      "case_id": "SC-OTH-2025-00222",
+      "case_type": "Other",
+      "status": "Under Investigation",
+      "opened_date": "2025-11-14",
+      "linked_person_ids": ["P-0018"],
+      "linked_first_info_ids": ["FI-2025-0719"],
+      "linked_vehicle_ids": ["V-011"],
+      "modus_operandi": ["Panel concealment", "E-commerce resale suspicion"],
+      "summary": "Suspicion of concealed items within vehicle panels; case opened for targeted inspection.",
+      "outcome": null
+    },
+    {
+      "case_id": "SC-OTH-2025-00245",
+      "case_type": "Other",
+      "status": "Under Investigation",
+      "opened_date": "2025-12-09",
+      "linked_person_ids": ["P-0001", "P-0005"],
+      "linked_first_info_ids": ["FI-2025-1208", "FI-2025-1012", "FI-2024-0187"],
+      "linked_vehicle_ids": ["V-001", "V-006"],
+      "modus_operandi": ["Identity overlap", "Pattern-based risk scoring"],
+      "summary": "Case opened to reconcile potential duplicate identity records and assess linked risk patterns across vehicles and trips.",
+      "outcome": null
+    }
+  ],
+
+  "trips": [
+    {
+      "trip_id": "T-2025-10120",
+      "person_id": "P-0005",
+      "vehicle_id": "V-006",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": null,
+      "arrival_date": "2025-12-02",
+      "travel_pattern_flag": null
+    },
+    {
+      "trip_id": "T-2024-09981",
+      "person_id": "P-0001",
+      "vehicle_id": "V-001",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2024-08-09",
+      "return_date": "2024-08-09",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2024-10455",
+      "person_id": "P-0003",
+      "vehicle_id": "V-002",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2024-09-01",
+      "return_date": "2024-09-02",
+      "travel_pattern_flag": "Overnight stay"
+    },
+    {
+      "trip_id": "T-2024-11002",
+      "person_id": "P-0002",
+      "vehicle_id": null,
+      "entry_point": "Changi Airport",
+      "destination": "Tokyo",
+      "departure_date": "2024-07-12",
+      "return_date": "2024-07-20",
+      "travel_pattern_flag": "Normal travel"
+    },
+
+    {
+      "trip_id": "T-2024-12011",
+      "person_id": "P-0005",
+      "vehicle_id": "V-006",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2024-12-14",
+      "return_date": "2024-12-14",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00018",
+      "person_id": "P-0005",
+      "vehicle_id": "V-006",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-01-05",
+      "return_date": "2025-01-05",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00044",
+      "person_id": "P-0001",
+      "vehicle_id": "V-001",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-01-11",
+      "return_date": "2025-01-11",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00077",
+      "person_id": "P-0002",
+      "vehicle_id": "V-013",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-01-26",
+      "return_date": "2025-01-26",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00103",
+      "person_id": "P-0003",
+      "vehicle_id": "V-002",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-02-03",
+      "return_date": "2025-02-04",
+      "travel_pattern_flag": "Overnight stay"
+    },
+    {
+      "trip_id": "T-2025-00140",
+      "person_id": "P-0017",
+      "vehicle_id": "V-007",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-02-22",
+      "return_date": "2025-02-23",
+      "travel_pattern_flag": "Overnight stay"
+    },
+    {
+      "trip_id": "T-2025-00188",
+      "person_id": "P-0010",
+      "vehicle_id": "V-009",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-03-09",
+      "return_date": "2025-03-09",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00220",
+      "person_id": "P-0006",
+      "vehicle_id": "V-015",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-03-19",
+      "return_date": "2025-03-19",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00249",
+      "person_id": "P-0006",
+      "vehicle_id": "V-015",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-04-02",
+      "return_date": "2025-04-02",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00278",
+      "person_id": "P-0021",
+      "vehicle_id": "V-010",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-04-19",
+      "return_date": "2025-04-19",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00304",
+      "person_id": "P-0021",
+      "vehicle_id": "V-010",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-05-03",
+      "return_date": "2025-05-03",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00333",
+      "person_id": "P-0008",
+      "vehicle_id": "V-005",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-05-15",
+      "return_date": "2025-05-15",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00370",
+      "person_id": "P-0014",
+      "vehicle_id": "V-016",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-06-01",
+      "return_date": "2025-06-01",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00402",
+      "person_id": "P-0019",
+      "vehicle_id": "V-012",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-06-12",
+      "return_date": "2025-06-12",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00431",
+      "person_id": "P-0019",
+      "vehicle_id": "V-012",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-06-29",
+      "return_date": "2025-06-29",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00466",
+      "person_id": "P-0013",
+      "vehicle_id": "V-018",
+      "entry_point": "Changi Airport",
+      "destination": "Bangkok",
+      "departure_date": "2025-07-08",
+      "return_date": "2025-07-12",
+      "travel_pattern_flag": "Normal travel"
+    },
+    {
+      "trip_id": "T-2025-00490",
+      "person_id": "P-0016",
+      "vehicle_id": null,
+      "entry_point": "Changi Airport",
+      "destination": "Ho Chi Minh City",
+      "departure_date": "2025-07-18",
+      "return_date": "2025-07-22",
+      "travel_pattern_flag": "Normal travel"
+    },
+    {
+      "trip_id": "T-2025-00515",
+      "person_id": "P-0010",
+      "vehicle_id": "V-009",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-08-02",
+      "return_date": "2025-08-02",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00548",
+      "person_id": "P-0023",
+      "vehicle_id": "V-014",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-08-16",
+      "return_date": "2025-08-16",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00579",
+      "person_id": "P-0022",
+      "vehicle_id": "V-017",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-09-06",
+      "return_date": "2025-09-06",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00610",
+      "person_id": "P-0017",
+      "vehicle_id": "V-007",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-09-21",
+      "return_date": "2025-09-22",
+      "travel_pattern_flag": "Overnight stay"
+    },
+    {
+      "trip_id": "T-2025-00642",
+      "person_id": "P-0018",
+      "vehicle_id": "V-011",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-10-11",
+      "return_date": "2025-10-11",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00677",
+      "person_id": "P-0018",
+      "vehicle_id": "V-011",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-10-26",
+      "return_date": "2025-10-26",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00711",
+      "person_id": "P-0001",
+      "vehicle_id": "V-001",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-11-09",
+      "return_date": "2025-11-09",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00740",
+      "person_id": "P-0005",
+      "vehicle_id": "V-006",
+      "entry_point": "Woodlands Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-11-23",
+      "return_date": "2025-11-23",
+      "travel_pattern_flag": "Same-day return"
+    },
+    {
+      "trip_id": "T-2025-00788",
+      "person_id": "P-0003",
+      "vehicle_id": "V-002",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-12-01",
+      "return_date": "2025-12-02",
+      "travel_pattern_flag": "Overnight stay"
+    },
+    {
+      "trip_id": "T-2025-00805",
+      "person_id": "P-0002",
+      "vehicle_id": "V-013",
+      "entry_point": "Tuas Checkpoint",
+      "destination": "Johor Bahru",
+      "departure_date": "2025-12-06",
+      "return_date": "2025-12-06",
+      "travel_pattern_flag": "Same-day return"
+    }
+  ]
+}

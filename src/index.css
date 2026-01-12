@@ -1,0 +1,40 @@
+:root {
+  /* Deep navy / blue palette */
+  --bg-main: #060f1f;
+  --bg-panel: #0b1c33;
+  --bg-panel-2: #0f2747;
+
+  --border: rgba(255, 255, 255, 0.10);
+
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.65);
+
+  --blue-primary: #2d6bff;
+  --blue-secondary: #1b4dd9;
+
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Ubuntu', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-main);
+
+  background:
+    radial-gradient(900px 500px at 15% 10%, rgba(45,107,255,0.18), transparent 60%),
+    radial-gradient(900px 500px at 85% 0%, rgba(27,77,217,0.14), transparent 60%),
+    linear-gradient(180deg, #050b14 0%, #060f1f 100%);
+}
+
+input, button {
+  font-family: inherit;
+  color: inherit;
+}
