@@ -19,7 +19,9 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 
 if (!OPENAI_API_KEY) {
-  console.warn("[WARN] OPENAI_API_KEY is not set. /chat will fall back to deterministic search.");
+  console.warn(
+    "[WARN] OPENAI_API_KEY is not set. /chat will fall back to deterministic search."
+  );
 }
 
 const openai = OPENAI_API_KEY ? new OpenAI({ apiKey: OPENAI_API_KEY }) : null;
@@ -40,12 +42,16 @@ function findPersonMatchesByName(name) {
 function tripsForPersonOnDate(personId, date) {
   return (data.trips ?? []).filter((t) => {
     if (t.person_id !== personId) return false;
-    return t.departure_date === date || t.return_date === date || t.arrival_date === date;
+    return (
+      t.departure_date === date || t.return_date === date || t.arrival_date === date
+    );
   });
 }
 
 function casesForPerson(personId) {
-  return (data.cases ?? []).filter((c) => (c.linked_person_ids ?? []).includes(personId));
+  return (data.cases ?? []).filter((c) =>
+    (c.linked_person_ids ?? []).includes(personId)
+  );
 }
 
 // ---------- LLM intent schema ----------
@@ -68,12 +74,7 @@ const ParsedOutSchema = z.union([
     })
     .strict(),
 
-  z
-    .object({
-      action: z.literal("clarify"),
-      question: z.string().min(1),
-    })
-    .strict(),
+  z.object({ action: z.literal("clarify"), question: z.string().min(1) }).strict(),
 ]);
 
 function systemPrompt() {
@@ -155,9 +156,15 @@ async function parseToStructuredQuery(userText) {
 
   // --- deterministic pre-router (beats LLM laziness) ---
   // where did <name> go on YYYY-MM-DD
-  const m1 = text.match(/^where did\s+(.+?)\s+go on\s+(\d{4}-\d{2}-\d{2})\??$/i);
+  const m1 = text.match(
+    /^where did\s+(.+?)\s+go on\s+(\d{4}-\d{2}-\d{2})\??$/i
+  );
   if (m1) {
-    return { action: "trip_destination_on_date", person_name: m1[1].trim(), date: m1[2] };
+    return {
+      action: "trip_destination_on_date",
+      person_name: m1[1].trim(),
+      date: m1[2],
+    };
   }
 
   // give me case details for P-0006
@@ -186,7 +193,10 @@ async function parseToStructuredQuery(userText) {
     try {
       json = JSON.parse(outText);
     } catch {
-      return { action: "clarify", question: "I couldn’t parse that. Can you rephrase your request?" };
+      return {
+        action: "clarify",
+        question: "I couldn’t parse that. Can you rephrase your request?",
+      };
     }
 
     const validated = ParsedOutSchema.safeParse(json);
@@ -349,7 +359,7 @@ app.post("/chat", async (req, res) => {
       });
     }
 
-    // last resort (shouldn’t happen if schema is enforced)
+    // last resort
     return res.json({
       assistantText: "Unsupported intent. Try rephrasing.",
       parsedQuery: null,
@@ -367,6 +377,8 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log("Backend running on http://localhost:3001");
+// IMPORTANT: hosting platforms inject PORT
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Backend running on http://localhost:${PORT}`);
 });
