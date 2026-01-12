@@ -10,7 +10,9 @@ import {
 
 type Msg = { role: "user" | "assistant"; text: string };
 
-type Selected = { type: "person" | "vehicle" | "case" | "fi" | "trip"; id: string } | null;
+type Selected =
+  | { type: "person" | "vehicle" | "case" | "fi" | "trip"; id: string }
+  | null;
 
 function Pill({ children }: { children: any }) {
   return <span className="pill">{children}</span>;
@@ -24,6 +26,8 @@ function SectionTitle({ title, count }: { title: string; count: number }) {
     </div>
   );
 }
+
+const BACKEND_CHAT_URL = "https://customs-chatbot-1.onrender.com/chat";
 
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
@@ -41,64 +45,61 @@ export default function App() {
         `- received_date:2025-12`,
     },
   ]);
+
   const [input, setInput] = useState("");
   const [selected, setSelected] = useState<Selected>(null);
-const [results, setResults] = useState<any>(null);
-const [assistantText, setAssistantText] = useState<string | null>(null);
-const [query, setQuery] = useState<string | null>(null);
 
+  const [results, setResults] = useState<any>(null);
+  const [query, setQuery] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
- async function send() {
-  const text = input.trim();
-  if (!text) return;
+  async function send() {
+    const text = input.trim();
+    if (!text || isLoading) return;
 
-  setMessages((m) => [...m, { role: "user", text }]);
-  setInput("");
-  setSelected(null);
+    setMessages((m) => [...m, { role: "user", text }]);
+    setInput("");
+    setSelected(null);
+    setIsLoading(true);
 
-  try {
-    const res = await fetch("http://localhost:3001/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text }),
-    });
+    try {
+      const res = await fetch(BACKEND_CHAT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
 
-    if (!res.ok) {
-      throw new Error(`Server error ${res.status}`);
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+      const payload = await res.json();
+
+      const assistantMsg: string =
+        payload?.assistantText ?? "Search completed.";
+
+      // Always show the assistant response (even for clarification)
+      setMessages((m) => [...m, { role: "assistant", text: assistantMsg }]);
+
+      // If backend wants clarification, do NOT overwrite results/query.
+      if (payload?.clarification) {
+        setIsLoading(false);
+        return;
+      }
+
+      setResults(payload?.results ?? null);
+      setQuery(payload?.parsedQuery ?? text);
+    } catch (err) {
+      setMessages((m) => [
+        ...m,
+        {
+          role: "assistant",
+          text:
+            "Error contacting backend. Check the Render service is live and try again.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
     }
-
-    const data = await res.json();
-
-  setAssistantText(data.assistantText ?? null);
-
-if (data.clarification) {
-  // Don’t overwrite results; user needs to answer the question next.
-  setQuery(null);
-  return;
-}
-
-setResults(data.results);
-setQuery(data.parsedQuery ?? text);
-
-
-    setMessages((m) => [
-      ...m,
-      {
-        role: "assistant",
-        text: data.assistantText ?? "Search completed.",
-      },
-    ]);
-  } catch (err: any) {
-    setMessages((m) => [
-      ...m,
-      {
-        role: "assistant",
-        text: "Error contacting backend. Is the server running?",
-      },
-    ]);
   }
-}
-
 
   const detail = useMemo(() => {
     if (!selected) return null;
@@ -118,7 +119,8 @@ setQuery(data.parsedQuery ?? text);
   }, [selected]);
 
   const placeholderCaseFileUrl = "https://example.com/case-file";
-  const placeholderImage = "https://via.placeholder.com/960x540.png?text=Case+File+Placeholder";
+  const placeholderImage =
+    "https://via.placeholder.com/960x540.png?text=Case+File+Placeholder";
 
   return (
     <div className="app">
@@ -127,7 +129,9 @@ setQuery(data.parsedQuery ?? text);
           <div className="brand-dot" />
           Customs Search Copilot
         </div>
-        <div className="topbarHint">In-memory demo • Tool-ready for Bedrock later</div>
+        <div className="topbarHint">
+          In-memory demo • Tool-ready for Bedrock later
+        </div>
       </div>
 
       <div className="main">
@@ -135,7 +139,9 @@ setQuery(data.parsedQuery ?? text);
         <div className="chat">
           <div className="chat-header">
             Conversation
-            <div style={{ fontSize: 12, opacity: 0.65 }}>Search: all fields + filters</div>
+            <div style={{ fontSize: 12, opacity: 0.65 }}>
+              Search: all fields + filters
+            </div>
           </div>
 
           <div className="chat-messages">
@@ -154,8 +160,11 @@ setQuery(data.parsedQuery ?? text);
               onChange={(e) => setInput(e.target.value)}
               placeholder='Try: nationality:malaysian gender:male address:"johor bahru"'
               onKeyDown={(e) => e.key === "Enter" && send()}
+              disabled={isLoading}
             />
-            <button onClick={send}>Search</button>
+            <button onClick={send} disabled={isLoading}>
+              {isLoading ? "Searching..." : "Search"}
+            </button>
           </div>
         </div>
 
@@ -164,7 +173,8 @@ setQuery(data.parsedQuery ?? text);
           <div className="card">
             <div className="card-title">Search Results</div>
             <div className="card-sub">
-              Querying across persons, vehicles, first info reports, cases, and trips.
+              Querying across persons, vehicles, first info reports, cases, and
+              trips.
             </div>
             {query && (
               <div className="queryBar">
@@ -189,20 +199,25 @@ setQuery(data.parsedQuery ?? text);
                     <button
                       key={p.person_id}
                       className="item"
-                      onClick={() => setSelected({ type: "person", id: p.person_id })}
+                      onClick={() =>
+                        setSelected({ type: "person", id: p.person_id })
+                      }
                     >
                       <div className="itemMain">
                         <div className="itemTitle">{p.name?.primary_name}</div>
                         <div className="itemSub">
                           <Pill>{p.person_id}</Pill> <Pill>{p.gender}</Pill>{" "}
-                          <Pill>{p.nationality}</Pill> <Pill>{p.date_of_birth}</Pill>
+                          <Pill>{p.nationality}</Pill>{" "}
+                          <Pill>{p.date_of_birth}</Pill>
                         </div>
                       </div>
                       <div className="chev">›</div>
                     </button>
                   ))}
                   {results.persons.length > 12 && (
-                    <div className="moreHint">Showing 12 of {results.persons.length}</div>
+                    <div className="moreHint">
+                      Showing 12 of {results.persons.length}
+                    </div>
                   )}
                 </div>
               </div>
@@ -215,7 +230,9 @@ setQuery(data.parsedQuery ?? text);
                     <button
                       key={v.vehicle_id}
                       className="item"
-                      onClick={() => setSelected({ type: "vehicle", id: v.vehicle_id })}
+                      onClick={() =>
+                        setSelected({ type: "vehicle", id: v.vehicle_id })
+                      }
                     >
                       <div className="itemMain">
                         <div className="itemTitle">{v.vehicle_number}</div>
@@ -228,7 +245,9 @@ setQuery(data.parsedQuery ?? text);
                     </button>
                   ))}
                   {results.vehicles.length > 12 && (
-                    <div className="moreHint">Showing 12 of {results.vehicles.length}</div>
+                    <div className="moreHint">
+                      Showing 12 of {results.vehicles.length}
+                    </div>
                   )}
                 </div>
               </div>
@@ -254,14 +273,19 @@ setQuery(data.parsedQuery ?? text);
                     </button>
                   ))}
                   {results.cases.length > 10 && (
-                    <div className="moreHint">Showing 10 of {results.cases.length}</div>
+                    <div className="moreHint">
+                      Showing 10 of {results.cases.length}
+                    </div>
                   )}
                 </div>
               </div>
 
               {/* FI + Trips */}
               <div className="card">
-                <SectionTitle title="Intel + Trips" count={results.first_info_reports.length + results.trips.length} />
+                <SectionTitle
+                  title="Intel + Trips"
+                  count={results.first_info_reports.length + results.trips.length}
+                />
                 <div className="list">
                   {results.first_info_reports.slice(0, 6).map((fi: any) => (
                     <button
@@ -325,7 +349,12 @@ setQuery(data.parsedQuery ?? text);
 
                 <div className="drawerBody">
                   <div className="drawerActions">
-                    <a className="primaryLink" href={placeholderCaseFileUrl} target="_blank" rel="noreferrer">
+                    <a
+                      className="primaryLink"
+                      href={placeholderCaseFileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       Open case file
                     </a>
                     <a className="ghostLink" href={placeholderImage} target="_blank" rel="noreferrer">
@@ -333,57 +362,55 @@ setQuery(data.parsedQuery ?? text);
                     </a>
                   </div>
 
-                  {/* Pretty summary blocks */}
                   <div className="kvGrid">
                     {Object.entries(detail).slice(0, 14).map(([k, v]) => (
                       <div key={k} className="kv">
                         <div className="kvKey">{k}</div>
-                        <div className="kvVal">{typeof v === "object" ? JSON.stringify(v) : String(v)}</div>
+                        <div className="kvVal">
+                          {typeof v === "object" ? JSON.stringify(v) : String(v)}
+                        </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* If person selected: show linked records */}
                   {selected.type === "person" && personGraph && (
-                    <>
-                      <div className="subSection">
-                        <div className="subSectionTitle">Linked records</div>
+                    <div className="subSection">
+                      <div className="subSectionTitle">Linked records</div>
 
-                        <div className="miniGrid">
-                          <div className="miniCard">
-                            <div className="miniTitle">Vehicles</div>
-                            <div className="miniCount">{personGraph.vehicles.length}</div>
-                          </div>
-                          <div className="miniCard">
-                            <div className="miniTitle">Cases</div>
-                            <div className="miniCount">{personGraph.cases.length}</div>
-                          </div>
-                          <div className="miniCard">
-                            <div className="miniTitle">Intel</div>
-                            <div className="miniCount">{personGraph.first_info_reports.length}</div>
-                          </div>
-                          <div className="miniCard">
-                            <div className="miniTitle">Trips</div>
-                            <div className="miniCount">{personGraph.trips.length}</div>
-                          </div>
+                      <div className="miniGrid">
+                        <div className="miniCard">
+                          <div className="miniTitle">Vehicles</div>
+                          <div className="miniCount">{personGraph.vehicles.length}</div>
                         </div>
-
-                        <div className="linkedList">
-                          {personGraph.cases.slice(0, 5).map((c: any) => (
-                            <button
-                              key={c.case_id}
-                              className="linkedItem"
-                              onClick={() => setSelected({ type: "case", id: c.case_id })}
-                            >
-                              <div className="linkedTitle">{c.case_id}</div>
-                              <div className="linkedSub">
-                                <Pill>{c.case_type}</Pill> <Pill>{c.status}</Pill>
-                              </div>
-                            </button>
-                          ))}
+                        <div className="miniCard">
+                          <div className="miniTitle">Cases</div>
+                          <div className="miniCount">{personGraph.cases.length}</div>
+                        </div>
+                        <div className="miniCard">
+                          <div className="miniTitle">Intel</div>
+                          <div className="miniCount">{personGraph.first_info_reports.length}</div>
+                        </div>
+                        <div className="miniCard">
+                          <div className="miniTitle">Trips</div>
+                          <div className="miniCount">{personGraph.trips.length}</div>
                         </div>
                       </div>
-                    </>
+
+                      <div className="linkedList">
+                        {personGraph.cases.slice(0, 5).map((c: any) => (
+                          <button
+                            key={c.case_id}
+                            className="linkedItem"
+                            onClick={() => setSelected({ type: "case", id: c.case_id })}
+                          >
+                            <div className="linkedTitle">{c.case_id}</div>
+                            <div className="linkedSub">
+                              <Pill>{c.case_type}</Pill> <Pill>{c.status}</Pill>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
