@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Customs chatbot backend (Express). Deterministic search + optional LLM intent routing.",
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.966.0",
     "cors": "^2.8.5",
