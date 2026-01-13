@@ -5,7 +5,22 @@ import { createRequire } from "node:module";
 import Fuse from "fuse.js";
 
 const require = createRequire(import.meta.url);
-const pdfParse = require("pdf-parse");
+const pdfParseModule = require("pdf-parse");
+const pdfParse =
+  typeof pdfParseModule === "function"
+    ? pdfParseModule
+    : typeof pdfParseModule?.default === "function"
+    ? pdfParseModule.default
+    : typeof pdfParseModule?.pdf === "function"
+    ? pdfParseModule.pdf
+    : null;
+
+if (!pdfParse) {
+  throw new Error(
+    "pdf-parse import failed: could not resolve a callable function export."
+  );
+}
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
