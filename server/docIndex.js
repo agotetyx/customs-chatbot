@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Fuse from "fuse.js";
 
-// ESM-friendly PDF text extraction (stable on Node 20+ / 25)
+// ESM-friendly PDF text extraction
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,8 +17,6 @@ function norm(s) {
 }
 
 function parseQueryTokens(q) {
-  // MVP: turn "a b key:value address:"johor bahru"" into tokens
-  // We don’t fully evaluate filters; we just tokenize them so they match in text/meta.
   const text = String(q ?? "").trim();
   if (!text) return [];
 
@@ -43,17 +41,15 @@ function parseQueryTokens(q) {
     }
   }
 
-  // de-dupe
   return [...new Set(expanded.map((x) => x.trim()).filter(Boolean))];
 }
 
 function inferDocMetaFromFilename(filename) {
-  // Your naming patterns:
   // persons_P-0006.pdf
   // vehicles_V-018.pdf
   // first_info_reports_FI-2025-1208.pdf
   // cases_SC-TOB-2025-00112.pdf
-  // trips_P-0006.pdf (seems per-person)
+  // trips_P-0006.pdf
   const base = filename.replace(/\.(pdf|docx)$/i, "");
   const [prefix, rest] = base.split("_", 2);
 
@@ -76,14 +72,12 @@ function inferDocMetaFromFilename(filename) {
   if (/^SC-/i.test(id)) meta.case_id = id.toUpperCase();
 
   // trip PDFs in your dump are named trips_P-0001.pdf etc
-  if (prefix === "trips" && /^P-\d{4}$/i.test(id)) meta.trip_id = base; // not perfect, but unique
+  if (prefix === "trips" && /^P-\d{4}$/i.test(id)) meta.trip_id = base;
 
   return meta;
 }
 
 function attachJsonMetadata(meta, data) {
-  // Optionally enrich doc meta from demoData.json based on inferred ID
-  // This helps queries like passport numbers / nationality match via metadata text.
   const enriched = { ...meta };
 
   try {
@@ -97,10 +91,11 @@ function attachJsonMetadata(meta, data) {
       const c = (data?.cases ?? []).find((x) => x.case_id === meta.case_id);
       if (c) enriched.json_meta = c;
     } else if (meta.first_info_id) {
-      const fi = (data?.first_info_reports ?? []).find((x) => x.first_info_id === meta.first_info_id);
+      const fi = (data?.first_info_reports ?? []).find(
+        (x) => x.first_info_id === meta.first_info_id
+      );
       if (fi) enriched.json_meta = fi;
     }
-    // trips don’t have a clear unique id in your list; skip for now
   } catch {
     // ignore
   }
@@ -109,9 +104,11 @@ function attachJsonMetadata(meta, data) {
 }
 
 async function extractPdfText(buffer) {
+  // pdfjs-dist expects Uint8Array, not Node Buffer
   const uint8 = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+
   const loadingTask = pdfjsLib.getDocument({ data: uint8 });
-const pdf = await loadingTask.promise;
+  const pdf = await loadingTask.promise;
 
   let out = "";
   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -127,9 +124,7 @@ function buildSnippet(text, tokens) {
   const t = String(text ?? "");
   const lower = t.toLowerCase();
 
-  // find earliest match across tokens
   let bestIdx = -1;
-  let bestToken = null;
 
   for (const rawTok of tokens) {
     const tok = rawTok.toLowerCase();
@@ -137,12 +132,10 @@ function buildSnippet(text, tokens) {
     const idx = lower.indexOf(tok);
     if (idx !== -1 && (bestIdx === -1 || idx < bestIdx)) {
       bestIdx = idx;
-      bestToken = rawTok;
     }
   }
 
   if (bestIdx === -1) {
-    // fallback: first 220 chars
     const trimmed = t.replace(/\s+/g, " ").trim();
     return trimmed.length > 220 ? trimmed.slice(0, 220) + "…" : trimmed;
   }
@@ -161,7 +154,6 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
   const docs = [];
 
   for (const filename of pdfs) {
-    console.log(`[docIndex] Indexed ${docs.length}/${pdfs.length} PDFs from ${docsDir}`);
     const absPath = path.join(docsDir, filename);
 
     try {
@@ -181,7 +173,6 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
         entity_id: meta.entity_id,
         meta,
         text,
-        // serve via Express static in index.js: /docs/<filename>
         public_path: `/docs/${encodeURIComponent(filename)}`,
         _search_blob: `${filename}\n${metaText}\n${text}`.toLowerCase(),
       });
@@ -190,9 +181,12 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
     }
   }
 
+  // ✅ log once, after processing all PDFs
+  console.log(`[docIndex] Indexed ${docs.length}/${pdfs.length} PDFs from ${docsDir}`);
+
   const fuse = new Fuse(docs, {
     includeScore: true,
-    threshold: 0.35, // fuzzy-ish, not insane
+    threshold: 0.35,
     ignoreLocation: true,
     minMatchCharLength: 2,
     keys: [
@@ -200,10 +194,11 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
       { name: "metaText", weight: 0.35 },
       { name: "text", weight: 0.45 },
     ],
-    // We'll provide metaText via getter below
+    // ✅ handle Fuse passing pathKey as array in some versions
     getFn: (obj, pathKey) => {
-      if (pathKey === "metaText") return obj.meta ? JSON.stringify(obj.meta) : "";
-      return obj[pathKey];
+      const key = Array.isArray(pathKey) ? pathKey[0] : pathKey;
+      if (key === "metaText") return obj.meta ? JSON.stringify(obj.meta) : "";
+      return obj[key];
     },
   });
 
@@ -215,8 +210,6 @@ export function searchDocuments(docIndex, query, { limit = 20 } = {}) {
 
   const tokens = parseQueryTokens(query);
   const q = tokens.join(" ").trim();
-
-  // If query is empty, return nothing
   if (!q) return [];
 
   const results = docIndex.fuse.search(q).slice(0, limit);
@@ -226,7 +219,6 @@ export function searchDocuments(docIndex, query, { limit = 20 } = {}) {
 
     const snippet = buildSnippet(d.text, tokens);
 
-    // simple matched terms (not perfect highlighting yet)
     const matched_terms = tokens
       .map((t) => t.trim())
       .filter((t) => t.length >= 2)
