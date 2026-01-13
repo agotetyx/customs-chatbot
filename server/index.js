@@ -5,22 +5,32 @@ import dotenv from "dotenv";
 import OpenAI from "openai";
 import { z } from "zod";
 
-import { searchAll } from "./query.js";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const dataPath = path.resolve(__dirname, "../src/assets/demoData.json");
-const data = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+import { searchAll } from "./query.js";
+import { buildDocIndex, searchDocuments } from "./docIndex.js";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ---- __dirname (ESM) ----
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// ---- load demo data (no import assert) ----
+const dataPath = path.resolve(__dirname, "../src/assets/demoData.json");
+const data = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+
+// ---- serve PDFs from server/docs as /docs/* ----
+app.use("/docs", express.static(path.join(__dirname, "docs")));
+
+// ---- build doc index once at startup ----
+const docIndexPromise = buildDocIndex({ data });
 
 // --- OpenAI / ChatGPT setup ---
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -163,7 +173,6 @@ async function parseToStructuredQuery(userText) {
   const text = String(userText ?? "").trim();
 
   // --- deterministic pre-router (beats LLM laziness) ---
-  // where did <name> go on YYYY-MM-DD
   const m1 = text.match(
     /^where did\s+(.+?)\s+go on\s+(\d{4}-\d{2}-\d{2})\??$/i
   );
@@ -175,13 +184,11 @@ async function parseToStructuredQuery(userText) {
     };
   }
 
-  // give me case details for P-0006
   const m2 = text.match(/^give me case details for\s+(P-\d{4})\b/i);
   if (m2) {
     return { action: "get_case_details_for_person", person_id: m2[1] };
   }
 
-  // Fallback: keep app functional even if OpenAI isn't configured
   if (!openai) return { action: "search", query: text };
 
   try {
@@ -237,14 +244,12 @@ app.post("/chat", async (req, res) => {
       });
     }
 
-    // 1) Parse intent -> action JSON
     const parsed = await parseToStructuredQuery(message);
 
     console.log("–––––––––––––––––––––");
     console.log("user:", message);
     console.log("[intent]:", parsed);
 
-    // 2) Clarification intent: no search
     if (parsed?.action === "clarify") {
       return res.json({
         assistantText: parsed.question,
@@ -254,11 +259,10 @@ app.post("/chat", async (req, res) => {
       });
     }
 
-    // 3) Deterministic handler: trip destination on date
+    // 3) trip destination on date
     if (parsed?.action === "trip_destination_on_date") {
       const date = parsed.date;
 
-      // resolve person
       let person = null;
 
       if (parsed.person_id) {
@@ -287,7 +291,14 @@ app.post("/chat", async (req, res) => {
               .map((m) => `${m.person_id} (${m.name?.primary_name ?? "Unknown"})`)
               .join(", ")}`,
             parsedQuery: null,
-            results: { persons: matches, vehicles: [], first_info_reports: [], cases: [], trips: [] },
+            results: {
+              persons: matches,
+              vehicles: [],
+              first_info_reports: [],
+              cases: [],
+              trips: [],
+              documents: [],
+            },
             clarification: true,
           });
         }
@@ -300,7 +311,14 @@ app.post("/chat", async (req, res) => {
         return res.json({
           assistantText: `No trips found for ${person.name?.primary_name ?? person.person_id} on ${date}.`,
           parsedQuery: null,
-          results: { persons: [person], vehicles: [], first_info_reports: [], cases: [], trips: [] },
+          results: {
+            persons: [person],
+            vehicles: [],
+            first_info_reports: [],
+            cases: [],
+            trips: [],
+            documents: [],
+          },
           clarification: false,
         });
       }
@@ -310,7 +328,14 @@ app.post("/chat", async (req, res) => {
         return res.json({
           assistantText: `${person.name?.primary_name ?? person.person_id} went to ${t.destination} on ${date} via ${t.entry_point}.`,
           parsedQuery: null,
-          results: { persons: [person], vehicles: [], first_info_reports: [], cases: [], trips },
+          results: {
+            persons: [person],
+            vehicles: [],
+            first_info_reports: [],
+            cases: [],
+            trips,
+            documents: [],
+          },
           clarification: false,
         });
       }
@@ -318,12 +343,19 @@ app.post("/chat", async (req, res) => {
       return res.json({
         assistantText: `Found ${trips.length} trips for ${person.name?.primary_name ?? person.person_id} on ${date}. Which one—by entry point or vehicle?`,
         parsedQuery: null,
-        results: { persons: [person], vehicles: [], first_info_reports: [], cases: [], trips },
+        results: {
+          persons: [person],
+          vehicles: [],
+          first_info_reports: [],
+          cases: [],
+          trips,
+          documents: [],
+        },
         clarification: true,
       });
     }
 
-    // 4) Deterministic handler: case details for person
+    // 4) case details for person
     if (parsed?.action === "get_case_details_for_person") {
       const person = (data.persons ?? []).find((p) => p.person_id === parsed.person_id) || null;
       if (!person) {
@@ -340,15 +372,33 @@ app.post("/chat", async (req, res) => {
       return res.json({
         assistantText: `Found ${cases.length} linked case(s) for ${parsed.person_id} (${person.name?.primary_name ?? "Unknown"}).`,
         parsedQuery: null,
-        results: { persons: [person], vehicles: [], first_info_reports: [], cases, trips: [] },
+        results: {
+          persons: [person],
+          vehicles: [],
+          first_info_reports: [],
+          cases,
+          trips: [],
+          documents: [],
+        },
         clarification: false,
       });
     }
 
-    // 5) Deterministic full-text search (existing engine)
+    // 5) search (JSON + PDFs)
     if (parsed?.action === "search") {
       const parsedQuery = parsed.query;
+
       const results = searchAll(parsedQuery);
+
+      // --- documents ---
+      const docIndex = await docIndexPromise;
+      const docHits = searchDocuments(docIndex, parsedQuery, { limit: 20 });
+
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      results.documents = docHits.map((d) => ({
+        ...d,
+        doc_url: `${baseUrl}${d.public_path}`,
+      }));
 
       console.log("query:", parsedQuery);
       console.log("counts:", {
@@ -357,6 +407,7 @@ app.post("/chat", async (req, res) => {
         cases: results.cases.length,
         first_info_reports: results.first_info_reports.length,
         trips: results.trips.length,
+        documents: results.documents.length,
       });
 
       return res.json({
@@ -367,7 +418,6 @@ app.post("/chat", async (req, res) => {
       });
     }
 
-    // last resort
     return res.json({
       assistantText: "Unsupported intent. Try rephrasing.",
       parsedQuery: null,
