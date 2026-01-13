@@ -11,7 +11,7 @@ import {
 type Msg = { role: "user" | "assistant"; text: string };
 
 type Selected =
-  | { type: "person" | "vehicle" | "case" | "fi" | "trip"; id: string }
+  | { type: "person" | "vehicle" | "case" | "fi" | "trip" | "document"; id: string }
   | null;
 
 function Pill({ children }: { children: any }) {
@@ -27,7 +27,12 @@ function SectionTitle({ title, count }: { title: string; count: number }) {
   );
 }
 
-const BACKEND_CHAT_URL = "https://customs-chatbot-1.onrender.com/chat";
+// Prefer env var for Netlify, fallback to your Render URL
+const API_BASE =
+  (import.meta as any).env?.VITE_API_URL?.replace(/\/$/, "") ||
+  "https://customs-chatbot-1.onrender.com";
+
+const CHAT_URL = `${API_BASE}/chat`;
 
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
@@ -42,7 +47,11 @@ export default function App() {
         `- address:"johor bahru"\n` +
         `- vehicle:JTY 223\n` +
         `- status:"under investigation"\n` +
-        `- received_date:2025-12`,
+        `- received_date:2025-12\n` +
+        `\nDocs:\n` +
+        `- P-0006\n` +
+        `- SC-TOB-2025-00112\n` +
+        `- FI-2025-0719`,
     },
   ]);
 
@@ -63,7 +72,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(BACKEND_CHAT_URL, {
+      const res = await fetch(CHAT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
@@ -73,17 +82,13 @@ export default function App() {
 
       const payload = await res.json();
 
-      const assistantMsg: string =
-        payload?.assistantText ?? "Search completed.";
+      const assistantMsg: string = payload?.assistantText ?? "Search completed.";
 
-      // Always show the assistant response (even for clarification)
+      // Always show assistant response
       setMessages((m) => [...m, { role: "assistant", text: assistantMsg }]);
 
-      // If backend wants clarification, do NOT overwrite results/query.
-      if (payload?.clarification) {
-        setIsLoading(false);
-        return;
-      }
+      // If backend wants clarification, don't overwrite results
+      if (payload?.clarification) return;
 
       setResults(payload?.results ?? null);
       setQuery(payload?.parsedQuery ?? text);
@@ -92,8 +97,7 @@ export default function App() {
         ...m,
         {
           role: "assistant",
-          text:
-            "Error contacting backend. Check the Render service is live and try again.",
+          text: `Error contacting backend. Is Render up? (${API_BASE})`,
         },
       ]);
     } finally {
@@ -101,10 +105,48 @@ export default function App() {
     }
   }
 
+  // Pull detail from *current results* first (so documents work),
+  // fallback to local JSON getters for the old types.
   const detail = useMemo(() => {
     if (!selected) return null;
-    return getEntityById(selected.type, selected.id);
-  }, [selected]);
+
+    if (selected.type === "document") {
+      const docs = results?.documents ?? [];
+      return docs.find((d: any) => d.doc_id === selected.id) ?? null;
+    }
+
+    // try results pool first
+    const pool =
+      selected.type === "person"
+        ? results?.persons
+        : selected.type === "vehicle"
+        ? results?.vehicles
+        : selected.type === "case"
+        ? results?.cases
+        : selected.type === "fi"
+        ? results?.first_info_reports
+        : results?.trips;
+
+    const key =
+      selected.type === "person"
+        ? "person_id"
+        : selected.type === "vehicle"
+        ? "vehicle_id"
+        : selected.type === "case"
+        ? "case_id"
+        : selected.type === "fi"
+        ? "first_info_id"
+        : "trip_id";
+
+    const fromResults = Array.isArray(pool)
+      ? pool.find((x: any) => x?.[key] === selected.id)
+      : null;
+
+    if (fromResults) return fromResults;
+
+    // fallback to local in-memory helpers
+    return getEntityById(selected.type as any, selected.id);
+  }, [selected, results]);
 
   const personGraph = useMemo(() => {
     if (!selected || selected.type !== "person") return null;
@@ -120,7 +162,9 @@ export default function App() {
 
   const placeholderCaseFileUrl = "https://example.com/case-file";
   const placeholderImage =
-    "https://via.placeholder.com/960x540.png?text=Case+File+Placeholder";
+    "https://via.placeholder.com/960x540.png?text=Evidence+Snapshot";
+
+  const docs = results?.documents ?? [];
 
   return (
     <div className="app">
@@ -129,9 +173,7 @@ export default function App() {
           <div className="brand-dot" />
           Customs Search Copilot
         </div>
-        <div className="topbarHint">
-          In-memory demo • Tool-ready for Bedrock later
-        </div>
+        <div className="topbarHint">Demo • JSON + Documents • Backend on Render</div>
       </div>
 
       <div className="main">
@@ -139,9 +181,7 @@ export default function App() {
         <div className="chat">
           <div className="chat-header">
             Conversation
-            <div style={{ fontSize: 12, opacity: 0.65 }}>
-              Search: all fields + filters
-            </div>
+            <div style={{ fontSize: 12, opacity: 0.65 }}>Search: all fields + filters</div>
           </div>
 
           <div className="chat-messages">
@@ -166,6 +206,10 @@ export default function App() {
               {isLoading ? "Searching..." : "Search"}
             </button>
           </div>
+
+          <div style={{ fontSize: 12, opacity: 0.6, padding: "10px 14px" }}>
+            API: <span style={{ opacity: 0.9 }}>{API_BASE}</span>
+          </div>
         </div>
 
         {/* Workspace */}
@@ -173,9 +217,9 @@ export default function App() {
           <div className="card">
             <div className="card-title">Search Results</div>
             <div className="card-sub">
-              Querying across persons, vehicles, first info reports, cases, and
-              trips.
+              Persons • Vehicles • Intel • Cases • Trips • Documents
             </div>
+
             {query && (
               <div className="queryBar">
                 <Pill>query</Pill>
@@ -199,25 +243,20 @@ export default function App() {
                     <button
                       key={p.person_id}
                       className="item"
-                      onClick={() =>
-                        setSelected({ type: "person", id: p.person_id })
-                      }
+                      onClick={() => setSelected({ type: "person", id: p.person_id })}
                     >
                       <div className="itemMain">
                         <div className="itemTitle">{p.name?.primary_name}</div>
                         <div className="itemSub">
                           <Pill>{p.person_id}</Pill> <Pill>{p.gender}</Pill>{" "}
-                          <Pill>{p.nationality}</Pill>{" "}
-                          <Pill>{p.date_of_birth}</Pill>
+                          <Pill>{p.nationality}</Pill> <Pill>{p.date_of_birth}</Pill>
                         </div>
                       </div>
                       <div className="chev">›</div>
                     </button>
                   ))}
                   {results.persons.length > 12 && (
-                    <div className="moreHint">
-                      Showing 12 of {results.persons.length}
-                    </div>
+                    <div className="moreHint">Showing 12 of {results.persons.length}</div>
                   )}
                 </div>
               </div>
@@ -230,9 +269,7 @@ export default function App() {
                     <button
                       key={v.vehicle_id}
                       className="item"
-                      onClick={() =>
-                        setSelected({ type: "vehicle", id: v.vehicle_id })
-                      }
+                      onClick={() => setSelected({ type: "vehicle", id: v.vehicle_id })}
                     >
                       <div className="itemMain">
                         <div className="itemTitle">{v.vehicle_number}</div>
@@ -245,9 +282,7 @@ export default function App() {
                     </button>
                   ))}
                   {results.vehicles.length > 12 && (
-                    <div className="moreHint">
-                      Showing 12 of {results.vehicles.length}
-                    </div>
+                    <div className="moreHint">Showing 12 of {results.vehicles.length}</div>
                   )}
                 </div>
               </div>
@@ -273,14 +308,12 @@ export default function App() {
                     </button>
                   ))}
                   {results.cases.length > 10 && (
-                    <div className="moreHint">
-                      Showing 10 of {results.cases.length}
-                    </div>
+                    <div className="moreHint">Showing 10 of {results.cases.length}</div>
                   )}
                 </div>
               </div>
 
-              {/* FI + Trips */}
+              {/* Intel + Trips */}
               <div className="card">
                 <SectionTitle
                   title="Intel + Trips"
@@ -322,6 +355,40 @@ export default function App() {
                   ))}
                 </div>
               </div>
+
+              {/* Documents */}
+              <div className="card">
+                <SectionTitle title="Documents" count={docs.length} />
+                <div className="list">
+                  {docs.slice(0, 12).map((d: any) => (
+                    <button
+                      key={d.doc_id}
+                      className="item"
+                      onClick={() => setSelected({ type: "document", id: d.doc_id })}
+                    >
+                      <div className="itemMain">
+                        <div className="itemTitle">{d.title ?? d.filename ?? d.doc_id}</div>
+                        <div className="itemSub">
+                          {d.doc_type && <Pill>{d.doc_type}</Pill>}{" "}
+                          {d.case_id && <Pill>{d.case_id}</Pill>}{" "}
+                          {d.person_id && <Pill>{d.person_id}</Pill>}
+                        </div>
+
+                        {d.snippet && (
+                          <div style={{ marginTop: 6, fontSize: 12, opacity: 0.75, lineHeight: 1.35 }}>
+                            {d.snippet}
+                          </div>
+                        )}
+                      </div>
+                      <div className="chev">›</div>
+                    </button>
+                  ))}
+
+                  {docs.length > 12 && (
+                    <div className="moreHint">Showing 12 of {docs.length}</div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -340,7 +407,9 @@ export default function App() {
                       ? detail.case_id
                       : selected.type === "fi"
                       ? detail.first_info_id
-                      : detail.trip_id}
+                      : selected.type === "trip"
+                      ? detail.trip_id
+                      : detail.title ?? detail.filename ?? detail.doc_id}
                   </div>
                   <button className="drawerClose" onClick={() => setSelected(null)}>
                     ✕
@@ -349,30 +418,42 @@ export default function App() {
 
                 <div className="drawerBody">
                   <div className="drawerActions">
-                    <a
-                      className="primaryLink"
-                      href={placeholderCaseFileUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Open case file
-                    </a>
+                    {/* Documents get a real link */}
+                    {selected.type === "document" && detail.doc_url ? (
+                      <a className="primaryLink" href={detail.doc_url} target="_blank" rel="noreferrer">
+                        Open document (PDF)
+                      </a>
+                    ) : (
+                      <a className="primaryLink" href={placeholderCaseFileUrl} target="_blank" rel="noreferrer">
+                        Open case file
+                      </a>
+                    )}
+
                     <a className="ghostLink" href={placeholderImage} target="_blank" rel="noreferrer">
                       Evidence snapshot
                     </a>
                   </div>
 
+                  {/* snippet preview for docs */}
+                  {selected.type === "document" && detail.snippet && (
+                    <div className="card" style={{ marginBottom: 12 }}>
+                      <div className="card-title">Snippet</div>
+                      <div style={{ fontSize: 13, lineHeight: 1.5, opacity: 0.85 }}>
+                        {detail.snippet}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="kvGrid">
-                    {Object.entries(detail).slice(0, 14).map(([k, v]) => (
+                    {Object.entries(detail).slice(0, 18).map(([k, v]) => (
                       <div key={k} className="kv">
                         <div className="kvKey">{k}</div>
-                        <div className="kvVal">
-                          {typeof v === "object" ? JSON.stringify(v) : String(v)}
-                        </div>
+                        <div className="kvVal">{typeof v === "object" ? JSON.stringify(v) : String(v)}</div>
                       </div>
                     ))}
                   </div>
 
+                  {/* If person selected: show linked records */}
                   {selected.type === "person" && personGraph && (
                     <div className="subSection">
                       <div className="subSectionTitle">Linked records</div>
