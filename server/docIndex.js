@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { Buffer } from "node:buffer";
 import Fuse from "fuse.js";
 
 console.log("[docIndex] VERSION = 2026-01-13-uint8-fix");
@@ -13,10 +14,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DEFAULT_DOCS_DIR = path.join(__dirname, "docs");
-
-function norm(s) {
-  return String(s ?? "").toLowerCase().trim();
-}
 
 function parseQueryTokens(q) {
   const text = String(q ?? "").trim();
@@ -47,11 +44,6 @@ function parseQueryTokens(q) {
 }
 
 function inferDocMetaFromFilename(filename) {
-  // persons_P-0006.pdf
-  // vehicles_V-018.pdf
-  // first_info_reports_FI-2025-1208.pdf
-  // cases_SC-TOB-2025-00112.pdf
-  // trips_P-0006.pdf
   const base = filename.replace(/\.(pdf|docx)$/i, "");
   const [prefix, rest] = base.split("_", 2);
 
@@ -73,7 +65,6 @@ function inferDocMetaFromFilename(filename) {
   if (/^FI-\d{4}-\d{4}$/i.test(id)) meta.first_info_id = id.toUpperCase();
   if (/^SC-/i.test(id)) meta.case_id = id.toUpperCase();
 
-  // trip PDFs in your dump are named trips_P-0001.pdf etc
   if (prefix === "trips" && /^P-\d{4}$/i.test(id)) meta.trip_id = base;
 
   return meta;
@@ -106,10 +97,16 @@ function attachJsonMetadata(meta, data) {
 }
 
 async function extractPdfText(buffer) {
-  // pdfjs-dist expects Uint8Array, not Node Buffer
-  const uint8 = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+  // IMPORTANT:
+  // Buffer is a Uint8Array subclass, but pdfjs rejects Buffer specifically.
+  // Convert Buffer -> *plain* Uint8Array view.
+  const data = Buffer.isBuffer(buffer)
+    ? new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength)
+    : buffer instanceof Uint8Array
+    ? buffer
+    : new Uint8Array(buffer);
 
-  const loadingTask = pdfjsLib.getDocument({ data: uint8 });
+  const loadingTask = pdfjsLib.getDocument({ data });
   const pdf = await loadingTask.promise;
 
   let out = "";
@@ -132,9 +129,7 @@ function buildSnippet(text, tokens) {
     const tok = rawTok.toLowerCase();
     if (!tok || tok.length < 2) continue;
     const idx = lower.indexOf(tok);
-    if (idx !== -1 && (bestIdx === -1 || idx < bestIdx)) {
-      bestIdx = idx;
-    }
+    if (idx !== -1 && (bestIdx === -1 || idx < bestIdx)) bestIdx = idx;
   }
 
   if (bestIdx === -1) {
@@ -183,7 +178,6 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
     }
   }
 
-  // ✅ log once, after processing all PDFs
   console.log(`[docIndex] Indexed ${docs.length}/${pdfs.length} PDFs from ${docsDir}`);
 
   const fuse = new Fuse(docs, {
@@ -196,7 +190,6 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
       { name: "metaText", weight: 0.35 },
       { name: "text", weight: 0.45 },
     ],
-    // ✅ handle Fuse passing pathKey as array in some versions
     getFn: (obj, pathKey) => {
       const key = Array.isArray(pathKey) ? pathKey[0] : pathKey;
       if (key === "metaText") return obj.meta ? JSON.stringify(obj.meta) : "";
