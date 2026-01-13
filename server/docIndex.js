@@ -1,11 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import pdfParse from "pdf-parse";
+import { createRequire } from "node:module";
 import Fuse from "fuse.js";
+
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 const DOCS_DIR = path.join(__dirname, "docs");
 const norm = (s) => String(s ?? "").toLowerCase();
