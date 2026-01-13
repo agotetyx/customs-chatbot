@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 
 import { searchAll } from "./query.js";
 import { buildDocIndex, searchDocuments } from "./docIndex.js";
+console.log("[server] docIndex import OK", typeof buildDocIndex, typeof searchDocuments);
 
 dotenv.config();
 

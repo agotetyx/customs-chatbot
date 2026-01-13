@@ -4,6 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Fuse from "fuse.js";
 
+console.log("[docIndex] VERSION = 2026-01-13-uint8-fix");
+
 // ESM-friendly PDF text extraction
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 
