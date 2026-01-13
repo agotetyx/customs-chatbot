@@ -32,6 +32,13 @@ app.use("/docs", express.static(path.join(__dirname, "docs")));
 // ---- build doc index once at startup ----
 const docIndexPromise = buildDocIndex({ data });
 
+docIndexPromise.then((idx) => {
+  console.log("[docIndex] built_at:", idx.built_at);
+  console.log("[docIndex] docs indexed:", idx.docs.length);
+  console.log("[docIndex] sample:", idx.docs.slice(0, 3).map((d) => d.filename));
+});
+
+
 // --- OpenAI / ChatGPT setup ---
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
@@ -96,26 +103,28 @@ const ParsedOutSchema = z.union([
 ]);
 
 function systemPrompt() {
-  return (
-    "You are a strict intent router for a customs search tool. Return ONLY JSON.\n\n" +
-    "Choose exactly one action:\n" +
-    '1) {"action":"search","query":"..."}\n' +
-    '2) {"action":"trip_destination_on_date","person_id":"P-0006","date":"YYYY-MM-DD"} OR {"action":"trip_destination_on_date","person_name":"...","date":"YYYY-MM-DD"}\n' +
-    '3) {"action":"get_case_details_for_person","person_id":"P-0006"}\n' +
-    '4) {"action":"clarify","question":"..."}\n\n' +
-    "Routing rules:\n" +
-    "- If the user asks where someone went on a specific date, use trip_destination_on_date.\n" +
-    "- If user provides a person_id like P-0006, use person_id. Otherwise use person_name.\n" +
-    "- If user asks for case details for a person_id, use get_case_details_for_person.\n" +
-    "- If you are missing a required detail (name/id/date), ask ONE clarification question.\n" +
-    "- Otherwise default to search with the original keywords.\n\n" +
-    "Examples:\n" +
-    'User: "where did Rajiv Menon go on 2025-03-19"\n' +
-    'Output: {"action":"trip_destination_on_date","person_name":"Rajiv Menon","date":"2025-03-19"}\n' +
-    'User: "give me case details for P-0006"\n' +
-    'Output: {"action":"get_case_details_for_person","person_id":"P-0006"}\n'
-  );
+  return `You are a strict intent router for a customs search tool. Return ONLY JSON.
+
+Choose exactly one action:
+1) {"action":"search","query":"..."}
+2) {"action":"trip_destination_on_date","person_id":"P-0006","date":"YYYY-MM-DD"} OR {"action":"trip_destination_on_date","person_name":"...","date":"YYYY-MM-DD"}
+3) {"action":"get_case_details_for_person","person_id":"P-0006"}
+4) {"action":"clarify","question":"..."}
+
+Routing rules:
+- If the user asks where someone went on a specific date, use trip_destination_on_date.
+- If user provides a person_id like P-0006, use person_id. Otherwise use person_name.
+- If user asks for case details for a person_id, use get_case_details_for_person.
+- If you are missing a required detail (name/id/date), ask ONE clarification question.
+- Otherwise default to search with the original keywords.
+
+Examples:
+User: "where did Rajiv Menon go on 2025-03-19"
+Output: {"action":"trip_destination_on_date","person_name":"Rajiv Menon","date":"2025-03-19"}
+User: "give me case details for P-0006"
+Output: {"action":"get_case_details_for_person","person_id":"P-0006"}`;
 }
+
 
 function jsonSchemaForParser() {
   return {

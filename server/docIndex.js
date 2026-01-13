@@ -109,8 +109,9 @@ function attachJsonMetadata(meta, data) {
 }
 
 async function extractPdfText(buffer) {
-  const loadingTask = pdfjsLib.getDocument({ data: buffer });
-  const pdf = await loadingTask.promise;
+  const uint8 = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+  const loadingTask = pdfjsLib.getDocument({ data: uint8 });
+const pdf = await loadingTask.promise;
 
   let out = "";
   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -160,6 +161,7 @@ export async function buildDocIndex({ data, docsDir = DEFAULT_DOCS_DIR } = {}) {
   const docs = [];
 
   for (const filename of pdfs) {
+    console.log(`[docIndex] Indexed ${docs.length}/${pdfs.length} PDFs from ${docsDir}`);
     const absPath = path.join(docsDir, filename);
 
     try {
