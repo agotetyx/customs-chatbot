@@ -34,6 +34,13 @@ const API_BASE =
 
 const CHAT_URL = `${API_BASE}/chat`;
 
+// Helper: build a doc URL even if backend doesn't return doc_url
+function buildDocUrl(doc: any) {
+  const filename = doc?.filename;
+  if (!filename) return null;
+  return `${API_BASE}/docs/${encodeURIComponent(filename)}`;
+}
+
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
     {
@@ -83,8 +90,6 @@ export default function App() {
       const payload = await res.json();
 
       const assistantMsg: string = payload?.assistantText ?? "Search completed.";
-
-      // Always show assistant response
       setMessages((m) => [...m, { role: "assistant", text: assistantMsg }]);
 
       // If backend wants clarification, don't overwrite results
@@ -115,7 +120,6 @@ export default function App() {
       return docs.find((d: any) => d.doc_id === selected.id) ?? null;
     }
 
-    // try results pool first
     const pool =
       selected.type === "person"
         ? results?.persons
@@ -144,7 +148,6 @@ export default function App() {
 
     if (fromResults) return fromResults;
 
-    // fallback to local in-memory helpers
     return getEntityById(selected.type as any, selected.id);
   }, [selected, results]);
 
@@ -164,7 +167,21 @@ export default function App() {
   const placeholderImage =
     "https://via.placeholder.com/960x540.png?text=Evidence+Snapshot";
 
+  // Documents list (safe)
   const docs = results?.documents ?? [];
+
+  // Counts (safe even if backend returns undefined arrays)
+  const persons = results?.persons ?? [];
+  const vehicles = results?.vehicles ?? [];
+  const cases = results?.cases ?? [];
+  const fis = results?.first_info_reports ?? [];
+  const trips = results?.trips ?? [];
+
+  // For document drawer action: accept either doc_url from backend or build it from filename
+  const docUrl =
+    selected?.type === "document" && detail
+      ? detail.doc_url || buildDocUrl(detail)
+      : null;
 
   return (
     <div className="app">
@@ -216,9 +233,7 @@ export default function App() {
         <div className="workspace">
           <div className="card">
             <div className="card-title">Search Results</div>
-            <div className="card-sub">
-              Persons • Vehicles • Intel • Cases • Trips • Documents
-            </div>
+            <div className="card-sub">Persons • Vehicles • Intel • Cases • Trips • Documents</div>
 
             {query && (
               <div className="queryBar">
@@ -237,9 +252,9 @@ export default function App() {
             <div className="grid2">
               {/* Persons */}
               <div className="card">
-                <SectionTitle title="Persons" count={results.persons.length} />
+                <SectionTitle title="Persons" count={persons.length} />
                 <div className="list">
-                  {results.persons.slice(0, 12).map((p: any) => (
+                  {persons.slice(0, 12).map((p: any) => (
                     <button
                       key={p.person_id}
                       className="item"
@@ -255,17 +270,17 @@ export default function App() {
                       <div className="chev">›</div>
                     </button>
                   ))}
-                  {results.persons.length > 12 && (
-                    <div className="moreHint">Showing 12 of {results.persons.length}</div>
+                  {persons.length > 12 && (
+                    <div className="moreHint">Showing 12 of {persons.length}</div>
                   )}
                 </div>
               </div>
 
               {/* Vehicles */}
               <div className="card">
-                <SectionTitle title="Vehicles" count={results.vehicles.length} />
+                <SectionTitle title="Vehicles" count={vehicles.length} />
                 <div className="list">
-                  {results.vehicles.slice(0, 12).map((v: any) => (
+                  {vehicles.slice(0, 12).map((v: any) => (
                     <button
                       key={v.vehicle_id}
                       className="item"
@@ -281,17 +296,17 @@ export default function App() {
                       <div className="chev">›</div>
                     </button>
                   ))}
-                  {results.vehicles.length > 12 && (
-                    <div className="moreHint">Showing 12 of {results.vehicles.length}</div>
+                  {vehicles.length > 12 && (
+                    <div className="moreHint">Showing 12 of {vehicles.length}</div>
                   )}
                 </div>
               </div>
 
               {/* Cases */}
               <div className="card">
-                <SectionTitle title="Cases" count={results.cases.length} />
+                <SectionTitle title="Cases" count={cases.length} />
                 <div className="list">
-                  {results.cases.slice(0, 10).map((c: any) => (
+                  {cases.slice(0, 10).map((c: any) => (
                     <button
                       key={c.case_id}
                       className="item"
@@ -307,20 +322,17 @@ export default function App() {
                       <div className="chev">›</div>
                     </button>
                   ))}
-                  {results.cases.length > 10 && (
-                    <div className="moreHint">Showing 10 of {results.cases.length}</div>
+                  {cases.length > 10 && (
+                    <div className="moreHint">Showing 10 of {cases.length}</div>
                   )}
                 </div>
               </div>
 
               {/* Intel + Trips */}
               <div className="card">
-                <SectionTitle
-                  title="Intel + Trips"
-                  count={results.first_info_reports.length + results.trips.length}
-                />
+                <SectionTitle title="Intel + Trips" count={fis.length + trips.length} />
                 <div className="list">
-                  {results.first_info_reports.slice(0, 6).map((fi: any) => (
+                  {fis.slice(0, 6).map((fi: any) => (
                     <button
                       key={fi.first_info_id}
                       className="item"
@@ -337,7 +349,7 @@ export default function App() {
                     </button>
                   ))}
 
-                  {results.trips.slice(0, 6).map((t: any) => (
+                  {trips.slice(0, 6).map((t: any) => (
                     <button
                       key={t.trip_id}
                       className="item"
@@ -375,7 +387,14 @@ export default function App() {
                         </div>
 
                         {d.snippet && (
-                          <div style={{ marginTop: 6, fontSize: 12, opacity: 0.75, lineHeight: 1.35 }}>
+                          <div
+                            style={{
+                              marginTop: 6,
+                              fontSize: 12,
+                              opacity: 0.75,
+                              lineHeight: 1.35,
+                            }}
+                          >
                             {d.snippet}
                           </div>
                         )}
@@ -386,6 +405,12 @@ export default function App() {
 
                   {docs.length > 12 && (
                     <div className="moreHint">Showing 12 of {docs.length}</div>
+                  )}
+
+                  {docs.length === 0 && (
+                    <div className="moreHint" style={{ opacity: 0.75 }}>
+                      No documents returned. Your backend must include <code>results.documents</code>.
+                    </div>
                   )}
                 </div>
               </div>
@@ -418,9 +443,8 @@ export default function App() {
 
                 <div className="drawerBody">
                   <div className="drawerActions">
-                    {/* Documents get a real link */}
-                    {selected.type === "document" && detail.doc_url ? (
-                      <a className="primaryLink" href={detail.doc_url} target="_blank" rel="noreferrer">
+                    {selected.type === "document" && docUrl ? (
+                      <a className="primaryLink" href={docUrl} target="_blank" rel="noreferrer">
                         Open document (PDF)
                       </a>
                     ) : (
